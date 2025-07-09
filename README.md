@@ -1,13 +1,14 @@
-# 📦 Release Notes – WU_update_v2
+# 🛠️ Windows Update Script – Versie 2
 
-**Versie:** 2
-**Datum:** 9 juli 2025
-**Auteur:** S&L Media IT
-**Bestandsnaam:** `WU_update_v2 - kopie.txt`
+Een geavanceerd PowerShell-script voor het beheren van Windows-updates met uitgebreide logging, categorisatie en gebruikersinteractie.
 
-## ✨ Nieuwe functionaliteiten
-
-- **Updatecategorisatie**: Updates worden nu automatisch gecategoriseerd in:
+## 📋 Functionaliteiten
+- Controleert of het script met administratorrechten draait
+- Start logging met systeem- en gebruikersinformatie
+- Controleert netwerkverbinding met Microsoft
+- Controleert en stelt indien nodig de juiste `ExecutionPolicy` in
+- Installeert automatisch NuGet en PSWindowsUpdate-module indien nodig
+- Categoriseert updates in:
   - Cumulatieve updates
   - Beveiligingsupdates
   - Driver-updates
@@ -15,36 +16,69 @@
   - Preview-updates
   - Definitie-updates
   - Servicing Stack-updates
+- Interactief keuzemenu voor installatie per categorie of alles tegelijk
+- Installeert geselecteerde updates met voortgangsindicator
+- Vraagt gebruiker om herstart na installatie
+- Logt alle acties en fouten in een tijdgestempeld logbestand
 
-- **Interactief keuzemenu**: Gebruikers kunnen nu zelf kiezen welke categorieën updates ze willen installeren, of alles in één keer.
+## 🧰 Vereisten
+- Windows 10 of hoger
+- PowerShell 5.1 of nieuwer
+- Administratorrechten
+- Internetverbinding
 
-- **Gedetailleerde logging**:
-  - Logt systeeminformatie, gebruiker, en besturingssysteem bij start.
-  - Logt netwerkstatus, installatievoortgang en eventuele fouten.
-  - Logbestand wordt automatisch geopend na voltooiing.
+# 🛠️ Windows Update Script – Versie 2
+Een geavanceerd PowerShell-script voor het beheren van Windows-updates met uitgebreide logging, categorisatie en gebruikersinteractie.
 
-- **Verbeterde foutafhandeling**:
-  - Bij ontbrekende modules of netwerkproblemen wordt het script veilig afgebroken met logging.
-  - Installatie van NuGet en PSWindowsUpdate gebeurt automatisch indien nodig.
+## 📋 Functionaliteiten
+- Controleert of het script met administratorrechten draait
+- Start logging met systeem- en gebruikersinformatie
+- Controleert netwerkverbinding met Microsoft
+- Controleert en stelt indien nodig de juiste `ExecutionPolicy` in
+- Installeert automatisch NuGet en PSWindowsUpdate-module indien nodig
+- Categoriseert updates in:
+  - Cumulatieve updates
+  - Beveiligingsupdates
+  - Driver-updates
+  - Feature-updates
+  - Preview-updates
+  - Definitie-updates
+  - Servicing Stack-updates
+- Interactief keuzemenu voor installatie per categorie of alles tegelijk
+- Installeert geselecteerde updates met voortgangsindicator
+- Vraagt gebruiker om herstart na installatie
+- Logt alle acties en fouten in een tijdgestempeld logbestand
 
-## 🔧 Verbeteringen
+## 🧰 Vereisten
+- Windows 10 of hoger
+- PowerShell 5.1 of nieuwer
+- Administratorrechten
+- Internetverbinding
 
-- **ExecutionPolicy-check**: Script controleert en biedt aan om de policy aan te passen naar `RemoteSigned`.
-- **Administratorcontrole**: Script start zichzelf opnieuw op met verhoogde rechten indien nodig.
-- **Modulaire structuur**: Elke stap is duidelijk gescheiden en gelogd voor betere traceerbaarheid.
+## 📦 Installatie
+Open PowerShell als administrator.
+Sla het script op als WU_update_v2.ps1.
+Voer het script uit:
 
+## ▶️ Gebruik
+Tijdens de uitvoering:
 
-## 🧪 Testresultaten
-
-- Script succesvol getest op Windows 10 en Windows 11.
-- Werkt met zowel Engelse als Nederlandse updatebeschrijvingen.
-- Logbestanden worden correct aangemaakt en opgeslagen.
-
-## ⚠️ Bekende beperkingen
-
-- Cumulatieve updates worden niet automatisch herkend als ze afwijkende titels hebben.
-- Herstart wordt handmatig gevraagd; automatische herstart is optioneel.
-
-## 📁 Locatie logbestanden
-
+Wordt gevraagd of je de ExecutionPolicy wilt aanpassen (indien nodig)
+Wordt een overzicht van beschikbare updates getoond
+Kun je kiezen welke categorieën je wilt installeren
+Wordt een logbestand aangemaakt in:
 C:\Users\[gebruikersnaam]\OneDrive - S&L Media\Zakelijk\S&L documenten\Scripts totaal\output logs
+
+## 📝 Logging
+Alle acties worden gelogd, inclusief systeeminformatie, netwerkstatus, updatecategorieën, installatievoortgang en fouten. Het logbestand wordt automatisch geopend na afloop.
+
+## 🔄 Herstart
+Na installatie van updates wordt gevraagd of je het systeem opnieuw wilt opstarten.
+
+## ⚠️ Opmerkingen
+Het script gebruikt Get-WUList en Install-WindowsUpdate van de PSWindowsUpdate-module.
+Zorg dat je toestemming hebt om updates te installeren op het systeem.
+Cumulatieve updates worden herkend op basis van titelpatronen.
+
+## 📄 Licentie
+Dit script is bedoeld voor intern gebruik binnen S&L Media. Gebruik op eigen risico.
