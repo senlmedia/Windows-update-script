@@ -1,33 +1,4 @@
 # 🛠️ Windows Update Script – Versie 2
-
-Een geavanceerd PowerShell-script voor het beheren van Windows-updates met uitgebreide logging, categorisatie en gebruikersinteractie.
-
-## 📋 Functionaliteiten
-- Controleert of het script met administratorrechten draait
-- Start logging met systeem- en gebruikersinformatie
-- Controleert netwerkverbinding met Microsoft
-- Controleert en stelt indien nodig de juiste `ExecutionPolicy` in
-- Installeert automatisch NuGet en PSWindowsUpdate-module indien nodig
-- Categoriseert updates in:
-  - Cumulatieve updates
-  - Beveiligingsupdates
-  - Driver-updates
-  - Feature-updates
-  - Preview-updates
-  - Definitie-updates
-  - Servicing Stack-updates
-- Interactief keuzemenu voor installatie per categorie of alles tegelijk
-- Installeert geselecteerde updates met voortgangsindicator
-- Vraagt gebruiker om herstart na installatie
-- Logt alle acties en fouten in een tijdgestempeld logbestand
-
-## 🧰 Vereisten
-- Windows 10 of hoger
-- PowerShell 5.1 of nieuwer
-- Administratorrechten
-- Internetverbinding
-
-# 🛠️ Windows Update Script – Versie 2
 Een geavanceerd PowerShell-script voor het beheren van Windows-updates met uitgebreide logging, categorisatie en gebruikersinteractie.
 
 ## 📋 Functionaliteiten
