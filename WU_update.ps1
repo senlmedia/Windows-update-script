@@ -6,7 +6,7 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 # --- Stap 0.1b: Logging starten ---
-$outputLogsPath = "C:\Users\niels\OneDrive - S&L Media\Zakelijk\S&L documenten\Scripts totaal\output logs"
+$outputLogsPath = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "output logs")
 if (-not (Test-Path $outputLogsPath)) {
     New-Item -Path $outputLogsPath -ItemType Directory | Out-Null
 }
@@ -99,12 +99,15 @@ if (-not $updates) {
 
 # Categoriseer updates
 $cumulativeUpdates = $updates | Where-Object { $_.Title -match 'Cumulatieve update|Cumulative Update' }
-$securityUpdates   = $updates | Where-Object { $_.Title -match 'Beveiligingsupdate|Security Update' }
+$securityUpdates   = $updates | Where-Object { $_.Title -match 'Beveiligingsupdate|Security Update|beveiligingsinformatie' }
 $driverUpdates     = $updates | Where-Object { $_.Title -match 'Stuurprogramma|Driver' }
 $featureUpdates    = $updates | Where-Object { $_.Title -match 'Feature update|Functie-update' }
 $previewUpdates    = $updates | Where-Object { $_.Title -match 'Preview' }
 $definitionUpdates = $updates | Where-Object { $_.Title -match 'Definitie-update|Definition Update' }
 $ssuUpdates        = $updates | Where-Object { $_.Title -match 'Servicing Stack Update|SSU' }
+$otherUpdates       = $updates | Where-Object {
+    $_.Title -notmatch 'Cumulatieve update|Cumulative Update|Beveiligingsupdate|Security Update|Stuurprogramma|Driver|Feature update|Functie-update|Preview|Definitie-update|Definition Update|Servicing Stack Update|SSU|beveiligingsinformatie|'
+}
 
 # Logging bij categorisatie
 Log "Aantal gevonden updates: $($updates.Count)"
@@ -115,6 +118,12 @@ Log "Aantal feature-updates: $($featureUpdates.Count)"
 Log "Aantal preview-updates: $($previewUpdates.Count)"
 Log "Aantal definitie-updates: $($definitionUpdates.Count)"
 Log "Aantal servicing stack-updates: $($ssuUpdates.Count)"
+Log "Aantal overige updates: $($otherUpdates.Count)"
+
+# Overzicht van alle gevonden updates
+foreach ($u in $updates) {
+    Log "Update gevonden: $($u.Title) (KB: $($u.KBArticleIDs -join ', '))"
+}
 
 # --- Stap 6: Keuzemenu ---
 Write-Host "`n📦 Updateoverzicht:"
@@ -125,13 +134,14 @@ Write-Host "4. Feature-updates:     $($featureUpdates.Count)"
 Write-Host "5. Preview-updates:     $($previewUpdates.Count)"
 Write-Host "6. Definitie-updates:   $($definitionUpdates.Count)"
 Write-Host "7. Servicing Stack:     $($ssuUpdates.Count)"
-Write-Host "8. Alles installeren"
+Write-Host "8. Overige updates:     $($otherUpdates.Count)"
+Write-Host "9. Alles installeren"
 
-$selectie = Read-Host "Welke categorieën wil je installeren? (bijv. 1,2,4 of 8 voor alles)"
+$selectie = Read-Host "Welke categorieën wil je installeren? (bijv. 1,2,4 of 9 voor alles)"
 $selectedUpdates = @()
 $selectedCategories = @()
 
-if ($selectie -eq '8') {
+if ($selectie -eq '9') {
     $selectedUpdates += $updates
     $selectedCategories += 'Alles'
 } else {
@@ -142,6 +152,7 @@ if ($selectie -eq '8') {
     if ($selectie -match '5') { $selectedUpdates += $previewUpdates; $selectedCategories += 'Preview-updates' }
     if ($selectie -match '6') { $selectedUpdates += $definitionUpdates; $selectedCategories += 'Definitie-updates' }
     if ($selectie -match '7') { $selectedUpdates += $ssuUpdates; $selectedCategories += 'Servicing Stack-updates' }
+    if ($selectie -match '8') { $selectedUpdates += $otherUpdates; $selectedCategories += 'Overige updates' }
 }
 
 Log "Gebruiker heeft gekozen voor installatie van: $($selectedCategories -join ', ')"
@@ -174,12 +185,18 @@ for ($i = 0; $i -lt $updateCount; $i++) {
 Write-Progress -Activity "Updates installeren..." -Completed
 
 # --- Stap 8: Vraag om herstart ---
-$reboot = Read-Host "Updates zijn geïnstalleerd. Wil je nu opnieuw opstarten? (ja/nee)"
-if ($reboot.ToLower() -eq "ja") {
-    Log "Gebruiker kiest voor herstart. Systeem wordt opnieuw opgestart."
-    Restart-Computer
+$rebootRequired = $selectedUpdates | Where-Object { $_.RebootRequired -eq $true }
+if ($rebootRequired.Count -gt 0) {
+    Log "Voor één of meer geïnstalleerde updates is een herstart vereist."
+    $reboot = Read-Host "Er is een herstart vereist. Wil je nu opnieuw opstarten? (ja/nee)"
+    if ($reboot.ToLower() -eq "ja") {
+        Log "Gebruiker kiest voor herstart. Systeem wordt opnieuw opgestart."
+        Restart-Computer
+    } else {
+        Log "Gebruiker heeft herstart overgeslagen."
+    }
 } else {
-    Log "Gebruiker heeft herstart overgeslagen."
+    Log "Geen herstart vereist voor geïnstalleerde updates."
 }
 
 Log "Script voltooid. Logbestand opgeslagen op: $logFile"
